@@ -516,7 +516,7 @@ export default function App(){
   const strongCount=useMemo(()=>Object.values(progress).filter(p=>(p.easyCount||0)>=2).length,[progress]);
 
   function startStudy(sec){
-    let words=sec==="review_due"?dueWords:sec==="review_weak"?weakWords:sec==="review_all"?[...new Set([...dueWords,...weakWords])]:VOCAB.filter(w=>w.section===sec);
+    let words=sec==="review_due"?dueWords:sec==="review_weak"?weakWords:sec==="review_all"?[...new Set([...dueWords,...weakWords])]:VOCAB.filter(w=>w.sec===sec);
     if(!words.length)return;
     setQueue([...words].sort(()=>Math.random()-.5));
     setQIdx(0);setFlipped(false);setStudySec(sec);setPage("study");
@@ -603,7 +603,7 @@ export default function App(){
         <h2 className="text-2xl font-bold mb-5" style={{fontFamily:"'Crimson Text',serif",color:GOLD}}>Study Levels</h2>
         <div className="space-y-3">
           {SECTIONS_META.map(sec=>{
-            const sw=VOCAB.filter(w=>w.section===sec.id);
+            const sw=VOCAB.filter(w=>w.sec===sec.id);
             const ss=sw.filter(w=>progress[w.id]).length;
             const pct=Math.round(ss/sw.length*100);
             return(
@@ -747,7 +747,7 @@ export default function App(){
     const filtered=useMemo(()=>VOCAB.filter(w=>{
       const q=search.toLowerCase();
       const ms=!q||w.arabic.includes(q)||w.tr.toLowerCase().includes(q)||w.en.toLowerCase().includes(q)||w.ru.toLowerCase().includes(q);
-      const mSec=!filterSec||w.section===filterSec;
+      const mSec=!filterSec||w.sec===filterSec;
       const mCat=filterCat==="all"||w.cat===filterCat;
       const p=progress[w.id];
       const mDiff=filterDiff==="all"||(filterDiff==="unseen"&&!p)||(filterDiff==="weak"&&p&&(p.hardCount||0)+(p.againCount||0)>=2)||(filterDiff==="strong"&&p&&(p.easyCount||0)>=2);
@@ -891,7 +891,7 @@ export default function App(){
         <div className={`rounded-2xl border p-5 ${CARD}`}>
           <h3 className={`font-bold mb-4 ${TXT}`}>Progress by Level</h3>
           {SECTIONS_META.map(sec=>{
-            const sw=VOCAB.filter(w=>w.section===sec.id);
+            const sw=VOCAB.filter(w=>w.sec===sec.id);
             const ss=sw.filter(w=>progress[w.id]).length;
             const p=Math.round(ss/sw.length*100);
             return(
